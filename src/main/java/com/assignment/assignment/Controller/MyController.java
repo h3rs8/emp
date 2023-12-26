@@ -42,7 +42,7 @@ public class MyController {
 	@PostMapping("/")
 	public ResponseEntity<?> addEmployee(@RequestBody Employee employee){
 		
-		if(employee.getPhoneNumber().trim().length()!=10 || validateEmail(employee.getEmail()))
+		if(employee.getPhoneNumber().trim().length()!=10 || !validateEmail(employee.getEmail()))
 			return new ResponseEntity<Employee>(HttpStatus.PRECONDITION_FAILED);
 		Employee u = new Employee();
 		u.setEmail(employee.getEmail());
