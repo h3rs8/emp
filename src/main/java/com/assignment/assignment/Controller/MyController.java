@@ -88,16 +88,18 @@ public class MyController {
 				
 	}
 	@PutMapping("/")
-	public ResponseEntity<?> updateEmployee(@RequestBody Employee Employee) {
-		Employee u = EmployeeRepository.findById(Employee.getId()).orElse(null);
+	public ResponseEntity<?> updateEmployee(@RequestBody Employee employee) {
+		Employee u = EmployeeRepository.findById(employee.getId()).orElse(null);
 		if(u==null)
 			return new ResponseEntity<Employee>(u,HttpStatus.NOT_MODIFIED);
+		if(employee.getPhoneNumber().trim().length()!=10 || !validateEmail(employee.getEmail()))
+			return new ResponseEntity<Employee>(HttpStatus.PRECONDITION_FAILED);
 			
-		u.setEmail(Employee.getEmail());
-		u.setEmployeeName(Employee.getEmployeeName());
-		u.setPhoneNumber(Employee.getPhoneNumber());
-		u.setProfileImage(Employee.getProfileImage());
-		u.setReportsTo(Employee.getReportsTo());
+		u.setEmail(employee.getEmail());
+		u.setEmployeeName(employee.getEmployeeName());
+		u.setPhoneNumber(employee.getPhoneNumber());
+		u.setProfileImage(employee.getProfileImage());
+		u.setReportsTo(employee.getReportsTo());
 		u = EmployeeRepository.save(u);
 		if(u.getId()!=null) {
 			
