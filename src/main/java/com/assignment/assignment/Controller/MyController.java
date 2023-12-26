@@ -1,6 +1,8 @@
 package com.assignment.assignment.Controller;
 
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -28,15 +30,26 @@ public class MyController {
 	EmailService email;
 	@Autowired
 	private EmployeeRepository EmployeeRepository;
+	private static final String EMAIL_REGEX =
+            "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+
+    private static final Pattern pattern = Pattern.compile(EMAIL_REGEX);
+
+    public static boolean validateEmail(String email) {
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
 	@PostMapping("/")
-	public ResponseEntity<?> addEmployee(@RequestBody Employee Employee){
+	public ResponseEntity<?> addEmployee(@RequestBody Employee employee){
 		
+		if(employee.getPhoneNumber().trim().length()!=10 || validateEmail(employee.getEmail()))
+			return new ResponseEntity<Employee>(HttpStatus.PRECONDITION_FAILED);
 		Employee u = new Employee();
-		u.setEmail(Employee.getEmail());
-		u.setEmployeeName(Employee.getEmployeeName());
-		u.setPhoneNumber(Employee.getPhoneNumber());
-		u.setProfileImage(Employee.getProfileImage());
-		u.setReportsTo(Employee.getReportsTo());
+		u.setEmail(employee.getEmail());
+		u.setEmployeeName(employee.getEmployeeName());
+		u.setPhoneNumber(employee.getPhoneNumber());
+		u.setProfileImage(employee.getProfileImage());
+		u.setReportsTo(employee.getReportsTo());
 		u = EmployeeRepository.save(u);
 		if(u.getId()!=null) {
 			if(u.getReportsTo()!=null)
@@ -74,7 +87,7 @@ public class MyController {
 		this.EmployeeRepository.deleteById(id);		
 				
 	}
-	@PutMapping
+	@PutMapping("/")
 	public ResponseEntity<?> updateEmployee(@RequestBody Employee Employee) {
 		Employee u = EmployeeRepository.findById(Employee.getId()).orElse(null);
 		if(u==null)

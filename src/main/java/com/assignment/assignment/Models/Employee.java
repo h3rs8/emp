@@ -10,7 +10,7 @@ public class Employee {
 	
 	private UUID id;
 	private String EmployeeName;
-	private Long PhoneNumber;
+	private String PhoneNumber;
 	private String Email;
 	private String ProfileImage;
 	private UUID ReportsTo;
@@ -27,10 +27,10 @@ public class Employee {
 	public void setEmployeeName(String employeeName) {
 		EmployeeName = employeeName;
 	}
-	public Long getPhoneNumber() {
+	public String getPhoneNumber() {
 		return PhoneNumber;
 	}
-	public void setPhoneNumber(Long phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		PhoneNumber = phoneNumber;
 	}
 	public String getEmail() {
@@ -52,7 +52,7 @@ public class Employee {
 	public void setReportsTo(UUID reportsTo) {
 		ReportsTo = reportsTo;
 	}
-	public Employee(UUID id, String employeeName, Long phoneNumber, String email, String profileImage, UUID reportsTo) {
+	public Employee(UUID id, String employeeName, String phoneNumber, String email, String profileImage, UUID reportsTo) {
 		super();
 		this.id = id;
 		EmployeeName = employeeName;
